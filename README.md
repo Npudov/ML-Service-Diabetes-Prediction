@@ -37,7 +37,7 @@ uv run uvicorn diabetes.service.app:app --port 8000
 В Doсkerfile у нас прописано 
 
 ```bash
-uv run --no-sync uvicorn churn.service.app:app --host 0.0.0.0 --port 8000
+uv run --no-sync uvicorn diabetes.service.app:app --host 0.0.0.0 --port 8000
 ```
 
 `--host 0.0.0.0` - слушать все интерфейсы, обязательно нужно внутри контейнера
