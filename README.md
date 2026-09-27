@@ -6,7 +6,7 @@
 ```bash
 uv sync
 ```
-![alt text](./image/image.png)
+![alt text](./images/image.png)
 
 Предварительно была зафиксирована версия Python (появится файл .python-version в корне проекта) через
 
