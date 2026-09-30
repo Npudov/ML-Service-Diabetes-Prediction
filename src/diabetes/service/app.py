@@ -2,14 +2,21 @@ import time
 import uuid
 from contextlib import asynccontextmanager
 
+from diabetes.model_store import load_model
 import joblib
 import pandas as pd
 from fastapi import BackgroundTasks, FastAPI, HTTPException
 from pydantic import BaseModel, Field
+from prometheus_client import Counter, Gauge, Histogram
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from diabetes import db
 from diabetes.config import settings
 
+PREDICTIONS = Counter("diabetes_predictions_total", "Predictions by class", ["diabetes"])
+SCORE = Histogram("diabetes_score", "Predicted diabetes probability", buckets=[i / 10 for i in range(11)])
+MODEL_INFO = Gauge("diabetes_model_info", "Model loaded by this pod", ["version"])
+LATENCY_BUCKETS = (0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1)  # штатные 0.1, 0.5, 1 с слишком грубые
 
 class Features(BaseModel):
     model_config = {"extra": "forbid"}
@@ -36,10 +43,12 @@ class Prediction(BaseModel):
 # загрузка модели один раз и её метаданных из артефакта (до yield запускается при старте сервиса, после yield при остановке сервиса)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    bundle = joblib.load(settings.model_path)
-    app.state.pipeline = bundle["pipeline"]
-    app.state.meta = bundle["metadata"]
-    app.state.version = bundle["metadata"]["model_version"]
+    app.state.pipeline, app.state.meta, app.state.version = load_model()
+    MODEL_INFO.labels(app.state.version).set(1)
+    #bundle = joblib.load(settings.model_path)
+    #app.state.pipeline = bundle["pipeline"]
+    #app.state.meta = bundle["metadata"]
+    #app.state.version = bundle["metadata"]["model_version"]
 
     db.init()
     yield
@@ -47,6 +56,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="diabetes-service", version="1.0", lifespan=lifespan)
+Instrumentator().instrument(app, latency_lowr_buckets=LATENCY_BUCKETS).expose(app)
 
 @app.get("/health")
 def health():
