@@ -2,16 +2,15 @@ import time
 import uuid
 from contextlib import asynccontextmanager
 
-from diabetes.model_store import load_model
-import joblib
 import pandas as pd
 from fastapi import BackgroundTasks, FastAPI, HTTPException
-from pydantic import BaseModel, Field
 from prometheus_client import Counter, Gauge, Histogram
 from prometheus_fastapi_instrumentator import Instrumentator
+from pydantic import BaseModel, Field
 
 from diabetes import db
 from diabetes.config import settings
+from diabetes.model_store import load_model
 
 PREDICTIONS = Counter("diabetes_predictions_total", "Predictions by class", ["diabetes"])
 SCORE = Histogram("diabetes_score", "Predicted diabetes probability", buckets=[i / 10 for i in range(11)])
