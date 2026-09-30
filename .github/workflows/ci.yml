@@ -114,10 +114,6 @@ jobs:
           curl --fail -s --retry 5 --retry-all-errors -H "$H" $U/health | tee health.json; echo
           grep -q '"model_version":"diabetes-v' health.json  
 
-          curl --fail -s localhost:8080/health; echo
-          curl --fail -s -X POST localhost:8080/v1/predict \
-            -H "Content-Type: application/json" -d @good.json; echo
-
           curl --fail -s -X POST -H "$H" $U/v1/predict \
             -H "Content-Type: application/json" -d @good.json | tee pred.json; echo
 
