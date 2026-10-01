@@ -7,4 +7,4 @@ data:
   MODEL_PATH: artifact/baseline_logreg.joblib
   MLFLOW_TRACKING_URI: http://mlflow.mlops:5000
   MODEL_NAME: diabetes
-  MODEL_ALIAS: champion
+  MODEL_ALIAS: production
