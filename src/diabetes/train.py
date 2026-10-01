@@ -45,8 +45,7 @@ def load_and_validate(path: Path) -> pd.DataFrame:
         raise ValueError(f"слишком мало строк: {len(df)}")
     if not set(df["diabetes"].unique()) <= {0, 1}:
         raise ValueError(f"неожиданные значения таргета: {df['diabetes'].unique()[:5]}")
-    #df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
-    #df["churn"] = (df["Churn"] == "Yes").astype(int)
+    
     return df
 
 
