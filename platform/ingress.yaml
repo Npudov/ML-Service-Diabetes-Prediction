@@ -39,7 +39,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: diabetes.localhost-error
+    - host: error.localhost
       http:
         paths:
           - path: /
