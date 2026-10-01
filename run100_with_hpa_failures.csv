@@ -1,0 +1,2 @@
+Method,Name,Error,Occurrences,First Seen,Last Seen
+POST,/v1/predict,CatchResponseError('Ошибка! Код ответа {post_response.status_code}'),4,2026-10-01T17:50:19Z,2026-10-01T17:51:25Z
