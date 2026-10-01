@@ -5,6 +5,7 @@
 Новая версия всегда получает алиас challenger. Алиас champion она получает, только если
 ROC-AUC на отложенной выборке лучше, чем у текущего champion (или champion ещё нет).
 """
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -87,6 +88,7 @@ def main() -> dict:
         metadata = {"features": features, "threshold": round(threshold, 4), "n_train": len(x_train),
                     "data_rows": len(df), "sklearn": sklearn.__version__}
         mlflow.log_params({"C": C, "model": "LogisticRegression", "seed": SEED, "data": str(DATA_PATH)})
+        mlflow.log_param("data_md5", hashlib.md5(DATA_PATH.read_bytes()).hexdigest())
         mlflow.log_metrics({"roc_auc": auc, "pr_auc": pr_auc, "threshold": threshold})
         mlflow.log_dict(metadata, "metadata.json")
 
