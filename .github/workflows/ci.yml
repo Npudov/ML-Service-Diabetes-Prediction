@@ -132,4 +132,5 @@ jobs:
           kubectl get pods -A -o wide
           kubectl get ingress -A
           kubectl describe deploy/diabetes-service | tail -20
+          kubectl get events | tail -50
           kubectl logs deploy/diabetes-service --tail=50 || true
