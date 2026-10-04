@@ -1,6 +1,6 @@
 [project]
 name = "diabetes-service"
-version="0.5.0"
+version="0.5.1"
 description = "Diabetes service prediction"
 requires-python=">=3.11,<3.13"
 
@@ -10,12 +10,8 @@ dependencies = [
     "pydantic",
     "pydantic-settings",
     "pandas",
-    "scikit-learn",
     "joblib",
     "psycopg[binary]",
-    "ipykernel>=7.3.0",
-    "matplotlib>=3.11.2",
-    "catboost>=1.2.10",
     "mlflow-skinny>=3.16,<4",
     "skops>=0.11",
     "prometheus-client>=0.21",
@@ -29,6 +25,10 @@ dev = [
     "locust",
     "ruff",
     "dvc>=3.67.1",
+    "scikit-learn",
+    "ipykernel>=7.3.0",
+    "matplotlib>=3.11.2",
+    "catboost>=1.2.10"
 ]
 
 [build-system]
