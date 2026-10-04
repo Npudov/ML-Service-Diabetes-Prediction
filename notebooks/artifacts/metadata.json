@@ -1,7 +1,7 @@
 {
   "model_name": "diabets-baseline",
   "model_version": "0.1.0",
-  "trained_at": "2026-09-25T22:54:48+00:00",
+  "trained_at": "2026-10-04T21:30:40+00:00",
   "n_train": 80000,
   "features": [
     "gender",
@@ -34,7 +34,7 @@
     "F1@0.5": 0.8102
   },
   "libs": {
-    "pandas": "3.0.5",
+    "pandas": "3.0.6",
     "scikit-learn": "1.9.1",
     "catboost": "1.2.10"
   }
