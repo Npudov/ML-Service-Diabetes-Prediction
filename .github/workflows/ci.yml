@@ -106,6 +106,13 @@ jobs:
           kubectl set image deploy/diabetes-service api="$IMAGE"
           kubectl rollout status deploy/diabetes-service --timeout=120s
 
+      - name: мониторинг и DAG
+        run: |
+          kubectl apply -f k8s/monitoring/
+          kubectl -n mlops create configmap airflow-dags --from-file=dags/ \
+            --dry-run=client -o yaml | kubectl apply -f -
+          kubectl -n mlops exec deploy/airflow -- airflow variables set diabetes_image "$IMAGE"
+
       - name: smoke
       # через Ingress, как ходят пользователи: из сети kind узел виден по имени, Traefik слушает NodePort 30080
         run: |
@@ -123,6 +130,7 @@ jobs:
           kubectl exec deploy/postgres -- psql -U postgres -d diabetes \
             -tAc "SELECT count(*) FROM predictions WHERE request_id = '$RID'" | grep -qx 1
 
+          curl --fail -s -H "$H" $U/metrics | grep -q '^diabetes_model_info{version="diabetes-v'
           
       
       - name: диагностика
