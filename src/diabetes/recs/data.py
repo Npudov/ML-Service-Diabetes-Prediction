@@ -100,7 +100,7 @@ def clean(raw: pd.DataFrame, articles: pd.DataFrame) -> pd.DataFrame:
 
     # 5. Джойним описания товаров из articles
     if not articles.empty:
-        art = articles[["article_id", "prod_name", "detail_desc"]].drop_duplicates(subset=["article_id"])
+        art = articles[["article_id", "prod_name"]].drop_duplicates(subset=["article_id"])
         art["Description"] = art["prod_name"].fillna("").str.strip()
         df = df.merge(art[["article_id", "Description"]], left_on="StockCode", right_on="article_id", how="left")
         df["Description"] = df["Description"].fillna("")
