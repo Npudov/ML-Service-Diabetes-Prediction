@@ -9,10 +9,10 @@ WORKDIR /app
 
 COPY pyproject.toml uv.lock ./
 
-RUN uv sync --frozen --no-dev --no-install-project
+RUN uv sync --no-dev --no-install-project
 
 COPY src/ src/
-RUN uv sync --frozen --no-dev
+RUN uv sync --no-dev
 
 COPY artifact/ artifact/
 
