@@ -3,7 +3,7 @@ import uuid
 from contextlib import asynccontextmanager
 
 import pandas as pd
-from fastapi import BackgroundTasks, FastAPI, HTTPException
+from fastapi import BackgroundTasks, FastAPI, HTTPException, Query
 from prometheus_client import Counter, Gauge, Histogram
 from prometheus_fastapi_instrumentator import Instrumentator
 from pydantic import BaseModel, Field
@@ -15,6 +15,7 @@ from diabetes.model_store import load_model
 PREDICTIONS = Counter("diabetes_predictions_total", "Predictions by class", ["diabetes"])
 SCORE = Histogram("diabetes_score", "Predicted diabetes probability", buckets=[i / 10 for i in range(11)])
 MODEL_INFO = Gauge("diabetes_model_info", "Model loaded by this pod", ["version"])
+RECS_SERVED = Counter("recs_responses_total", "Recommendation responses by source", ["source", "model_version"])
 LATENCY_BUCKETS = (0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1)  # штатные 0.1, 0.5, 1 с слишком грубые
 
 class Features(BaseModel):
@@ -98,3 +99,26 @@ def predict(x: Features, bg: BackgroundTasks) -> Prediction:
         request_id=request_id,
         latency_ms=latency_ms
     )
+
+
+class Item(BaseModel):
+    stock_code: str
+    description: str
+
+
+class Recommendations(BaseModel):
+    customer_id: str # ← было int, стало str
+    items: list[Item]
+    source: str  # als: личный список, popular: запасной вариант для незнакомых
+    model_version: str
+
+
+@app.get("/v1/recommend/{customer_id}")
+def recommend(customer_id: str, k: int = Query(10, ge=1, le=10)) -> Recommendations:
+    found = db.fetch_recommendations(customer_id, k)
+    if found is None:
+        raise HTTPException(status_code=503, detail="рекомендации ещё не опубликованы")
+    items, source, version = found
+    RECS_SERVED.labels(source, version).inc()
+    return Recommendations(customer_id=customer_id, items=[Item(stock_code=s, description=d) for s, d in items],
+                           source=source, model_version=version)

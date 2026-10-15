@@ -1,6 +1,6 @@
 [project]
 name = "diabetes-service"
-version="0.5.0"
+version="0.5.4"
 description = "Diabetes service prediction"
 requires-python=">=3.11,<3.13"
 
@@ -10,16 +10,17 @@ dependencies = [
     "pydantic",
     "pydantic-settings",
     "pandas",
-    "scikit-learn",
     "joblib",
     "psycopg[binary]",
-    "ipykernel>=7.3.0",
-    "matplotlib>=3.11.2",
-    "catboost>=1.2.10",
     "mlflow-skinny>=3.16,<4",
     "skops>=0.11",
     "prometheus-client>=0.21",
-    "prometheus-fastapi-instrumentator>=8"
+    "prometheus-fastapi-instrumentator>=8",
+    "implicit>=0.7.3",
+    "pandera>=0.33.1",
+    "scipy>=1.17.1",
+    "pyarrow>=25.0.1",
+    "dvc[s3]>=3.67.1",
 ]
 
 [dependency-groups]
@@ -29,6 +30,10 @@ dev = [
     "locust",
     "ruff",
     "dvc>=3.67.1",
+    "scikit-learn",
+    "ipykernel>=7.3.0",
+    "matplotlib>=3.11.2",
+    "catboost>=1.2.10"
 ]
 
 [build-system]
@@ -43,7 +48,7 @@ testpaths = ["tests"]
 markers = ["integration: нужна база данных - адрес в DATABASE_URL"]
 
 [tool.ruff]
-line-length = 150
+line-length = 160
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]
