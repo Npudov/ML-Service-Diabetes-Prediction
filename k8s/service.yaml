@@ -2,10 +2,13 @@ apiVersion: v1
 kind: Service
 metadata:
   name: diabetes-service
+  labels:
+    app: diabetes
 spec:
   type: ClusterIP
   selector:
     app: diabetes
   ports:
-    - port: 80
+    - name: http
+      port: 80
       targetPort: 8000
