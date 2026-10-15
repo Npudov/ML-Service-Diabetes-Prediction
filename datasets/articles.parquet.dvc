@@ -1,0 +1,5 @@
+outs:
+- md5: c7484da4f04c4e00ee42e1a65f585467
+  size: 6350206
+  hash: md5
+  path: articles.parquet

@@ -1,1 +1,7 @@
 /diabetes_prediction_dataset.csv
+/transactions.parquet
+/customers.parquet
+/articles.parquet
+/articles.csv
+/customers.csv
+/transactions_train.csv
