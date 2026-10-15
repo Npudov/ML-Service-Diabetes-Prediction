@@ -114,7 +114,7 @@ def main() -> int:
             return 1
 
         mlflow.set_tag("valid", "true")
-        mlflow.log_metric("patients": len(df))
+        mlflow.log_metric("patients", len(df))
 
         if not df.empty:
             mlflow.log_metric("total_patients_in_file", len(df))
