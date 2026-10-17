@@ -1,9 +1,9 @@
 """Тесты схемы pandera без использования реального датасета."""
 import pandas as pd
-import pytest
 import pandera.pandas as pa
+import pytest
 
-from diabetes.data import ROWS, EXPORT
+from diabetes.data import EXPORT, ROWS
 
 
 def get_valid_sample() -> pd.DataFrame:
