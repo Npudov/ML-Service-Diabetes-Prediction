@@ -18,8 +18,10 @@ import pandera.pandas as pa
 
 DIABETES_PATH = Path(os.getenv("DIABETES_DATA_PATH", "datasets/diabetes_prediction_dataset.csv"))
 EXPERIMENT = os.getenv("DIABETES_EXPERIMENT", "diabetes")
-os.environ["MLFLOW_TRACKING_URI"] = "http://mlflow.localhost:5000"
-os.environ["MLFLOW_REGISTRY_URI"] = "http://mlflow.localhost:5000"
+#os.environ["MLFLOW_TRACKING_URI"] = "http://mlflow.localhost:5000"
+#os.environ["MLFLOW_REGISTRY_URI"] = "http://mlflow.localhost:5000"
+os.environ.setdefault("MLFLOW_TRACKING_URI", "http://mlflow.mlops:5000")
+os.environ.setdefault("MLFLOW_REGISTRY_URI", "http://mlflow.mlops:5000")
 
 # правила для каждой строки: их можно проверить и на маленьком образце в CI
 ROWS = pa.DataFrameSchema(
