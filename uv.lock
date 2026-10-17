@@ -710,13 +710,14 @@ wheels = [
 
 [[package]]
 name = "diabetes-service"
-version = "0.5.4"
+version = "0.5.5"
 source = { editable = "." }
 dependencies = [
     { name = "dvc", extra = ["s3"] },
     { name = "fastapi" },
     { name = "implicit" },
     { name = "joblib" },
+    { name = "matplotlib" },
     { name = "mlflow-skinny" },
     { name = "pandas" },
     { name = "pandera" },
@@ -751,6 +752,7 @@ requires-dist = [
     { name = "fastapi" },
     { name = "implicit", specifier = ">=0.7.3" },
     { name = "joblib" },
+    { name = "matplotlib", specifier = ">=3.11.2" },
     { name = "mlflow-skinny", specifier = ">=3.16,<4" },
     { name = "pandas" },
     { name = "pandera", specifier = ">=0.33.1" },
