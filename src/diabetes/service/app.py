@@ -16,7 +16,9 @@ PREDICTIONS = Counter("diabetes_predictions_total", "Predictions by class", ["di
 SCORE = Histogram("diabetes_score", "Predicted diabetes probability", buckets=[i / 10 for i in range(11)])
 MODEL_INFO = Gauge("diabetes_model_info", "Model loaded by this pod", ["version"])
 RECS_SERVED = Counter("recs_responses_total", "Recommendation responses by source", ["source", "model_version"])
-LATENCY_BUCKETS = (0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1)  # штатные 0.1, 0.5, 1 с слишком грубые
+
+# 5мс, 10мс, 25мс, 50мс, 100мс, 200мс, 500мс, 1с, 2.5с, 5с
+LATENCY_BUCKETS = (0.005, 0.01, 0.025, 0.05, 0.1, 0.2, 0.5, 1.0, 2.5, 5.0) 
 
 class Features(BaseModel):
     model_config = {"extra": "forbid"}
