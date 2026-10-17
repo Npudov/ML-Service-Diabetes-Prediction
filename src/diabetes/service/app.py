@@ -93,6 +93,8 @@ def predict(x: Features, bg: BackgroundTasks) -> Prediction:
     bg.add_task(db.save_prediction, request_id, payload, score, app.state.version, latency_ms, status_code)
 
     diabetes = (score >= app.state.meta["threshold"])
+    PREDICTIONS.labels(str(churn).lower()).inc()
+    SCORE.observe(score)
 
     return Prediction(
         score=score,
