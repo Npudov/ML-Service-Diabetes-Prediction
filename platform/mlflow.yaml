@@ -4,7 +4,7 @@ metadata:
   name: mlops
 ---
 apiVersion: v1
-kind: PersistentVolumeClaim #
+kind: PersistentVolumeClaim
 metadata:
   name: mlflow-data
   namespace: mlops
