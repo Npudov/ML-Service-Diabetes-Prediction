@@ -22,6 +22,25 @@ from kubernetes.client import models as k8s
 )
 
 def diabetes_retrain():
+    validate = KubernetesPodOperator(
+        task_id="validate",
+        name="diabetes-validate",
+        namespace="mlops",
+        in_cluster=True,
+        image="{{ var.value.diabetes_image }}",
+        image_pull_policy="IfNotPresent",
+        cmds=[
+            "sh", "-c", 
+            "uv run --no-sync dvc pull -r cluster datasets/diabetes_prediction_dataset.csv && "
+            "uv run --no-sync python -m diabetes.data"
+        ],
+        env_vars={"MLFLOW_TRACKING_URI": "http://mlflow.mlops:5000"},
+        env_from=[k8s.V1EnvFromSource(secret_ref=k8s.V1SecretEnvSource(name="s3-credentials"))],
+        get_logs=True,
+        is_delete_operator_pod=True,
+    )
+
+
     train = KubernetesPodOperator(
         task_id="train",
         name="diabetes-train",
@@ -55,6 +74,7 @@ def diabetes_retrain():
         )
         print("diabetes-service перезапущен", now)
 
+    validate >> train
     promoted(train.output) >> rollout()
 
 
