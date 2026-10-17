@@ -18,27 +18,37 @@ import pandera.pandas as pa
 
 DIABETES_PATH = Path(os.getenv("DIABETES_DATA_PATH", "datasets/diabetes_prediction_dataset.csv"))
 EXPERIMENT = os.getenv("DIABETES_EXPERIMENT", "diabetes")
+os.environ["MLFLOW_TRACKING_URI"] = "http://mlflow.localhost:5000"
+os.environ["MLFLOW_REGISTRY_URI"] = "http://mlflow.localhost:5000"
 
 # правила для каждой строки: их можно проверить и на маленьком образце в CI
 ROWS = pa.DataFrameSchema(
     {
-        "gender": pa.Column(str, pa.Check.str_length(min_value=1)),
-        "age": pa.Column(int, pa.Check.greater_than(0)),
+        "gender": pa.Column(str, pa.Check.isin(["Male", "Female", "Other"])),
+        "age": pa.Column(int, pa.Check.greater_than_or_equal_to(0)),
         "hypertension": pa.Column(int),
         "heart_disease": pa.Column(int),
         "smoking_history": pa.Column(str, pa.Check.str_length(min_value=1)),
         "bmi": pa.Column(float),
         "HbA1c_level": pa.Column(float, pa.Check.greater_than(0.0)),
         "blood_glucose_level": pa.Column(int, pa.Check.greater_than(0)),
+        "diabetes": pa.Column(int, pa.Check.isin([0, 1])),
     },
     strict=True,
 )
+
+def check_diabetes_ratio(df: pd.DataFrame) -> bool:
+    # Проверка: доля диабетиков (diabetes == 1) должна быть от 2% до 50%. 
+    # Это защита от сломанной выгрузки, где фильтр случайно удалил всех больных или всех здоровых.
+    ratio = (df["diabetes"] == 1).mean()
+    return 0.02 <= ratio <= 0.50
 
 # правила для выгрузки целиком: объём и распределение, на образце не проверить
 EXPORT = pa.DataFrameSchema(
     ROWS.columns,
     checks=[
         pa.Check(lambda df: len(df) >= 5_000, error="меньше 5 тысяч строк: выгрузка неполная"),
+        pa.Check(check_diabetes_ratio, error="доля диабета вне диапазона 0.05-0.50: данные смещены или сломаны"),
     ],
     strict=True,
 )
