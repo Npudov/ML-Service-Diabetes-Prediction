@@ -1,5 +1,5 @@
 outs:
-- md5: cb243b99d81d96e9aeb08944ce9ac066
-  size: 3810356
+- md5: 34b3dd8bbc3b7beed65960579a4c159b
+  size: 214
   hash: md5
   path: diabetes_prediction_dataset.csv
