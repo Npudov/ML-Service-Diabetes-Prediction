@@ -2,7 +2,7 @@
 # Платформа одной командой: kind с портом 80, Traefik, MLflow, Airflow, S3 (RustFS), Prometheus и Grafana.
 # Повторный запуск безопасен: что уже стоит, только обновится.
 #
-#   bash platform/up.sh                    кластер sem4
+#   bash platform/up.sh                    кластер -diabetes-ml-platform-monitoring
 #   CLUSTER=sem3 bash platform/up.sh       другое имя кластера (то же нужно в ci.yml, KIND_CLUSTER)
 #
 # Ключи S3 по умолчанию учебные. Свои: S3_KEY=... S3_SECRET=... bash platform/up.sh
