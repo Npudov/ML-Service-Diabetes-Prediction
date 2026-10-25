@@ -5,7 +5,7 @@
 Через Ingress запросы делятся между подами и переживают rollout. Через port-forward нет:
 он привязан к одному поду и обрывается, когда этот под удаляют.
 --bad   доля заведомо плохих запросов (age = -1), они дают 422 на графике.
---recs  доля запросов рекомендаций для случайного номера клиента из диапазона Online Retail 12346..18287:
+--recs  доля запросов рекомендаций для случайного номера клиента из диапазона 12346..18287:
         примерно четверть таких номеров магазину незнакома, им достаётся популярное. Остановить: Ctrl+C.
 """
 import argparse
@@ -25,7 +25,7 @@ parser.add_argument("--recs", type=float, default=0.0)
 args = parser.parse_args()
 
 df = pd.read_csv("datasets/diabetes_prediction_dataset.csv").drop(columns=["diabetes"])
-#df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
+
 rows = [{k: (None if pd.isna(v) else v) for k, v in r.items()} for r in df.to_dict("records")]
 
 codes: dict[int, int] = {}

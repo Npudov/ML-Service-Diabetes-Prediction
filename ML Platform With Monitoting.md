@@ -6,6 +6,9 @@
 ```bash
 git clone https://github.com/Npudov/ML-Service-Diabetes-Prediction.git
 ```
+
+Датасеты для обучения скачайте по ссылке: https://drive.google.com/drive/folders/1QxY-ghizpP0KeEdWXbPQXqUkKBVAF9xZ?usp=sharing и положите их все в папку datasets/
+
 Далее выполните команду 
 ```bash
 uv sync
@@ -34,8 +37,8 @@ http://mlflow.localhost, http://diabetes.localhost, http://grafana.localhost, ht
 Далее указать в локальном конфиге (.dvc/config.local) dvc те поля, что указаны в S3_KEY и S3_SECRET скрипта platform/up.sh
 
 ```bash
-uv run dvc remote modify --local laptop access_key_id <значение из S3_KEY>
-uv run dvc remote modify --local laptop secret_access_key <значение из S3_SECRET>
+uv run dvc remote modify --local laptop access_key_id dvc-key-123
+uv run dvc remote modify --local laptop secret_access_key dvc-secret-456
 ```
 
 
@@ -45,12 +48,48 @@ uv run dvc remote modify --local laptop secret_access_key <значение из
 
 Для создания RUNNER_TOKEN зайдите в Github в Settings-Actions-Runners, нажмите New Self Hosted Runner, выберите свою платформу (например Linux X64, у нас кластер в docker) и скопируйте себе токен из --token, это токен github runner, он понадобится ниже. 
 
-Имя кластера у нас diabetes-ml-platform-monitoring, но сам раннер назван diabetes-ml-platform в данном случае
+Имя кластера у нас diabetes-ml-platform-monitoring, но сам раннер назван diabetes-ml-platform в данном случае (Нужно указать свой адрес репо в REPO_URL, например форк репозитория)
 
 ```bash
 docker run -d --name gh-runner --network kind --group-add 0 --restart unless-stopped -v /var/run/docker.sock:/var/run/docker.sock -e REPO_URL=https://github.com/Npudov/ML-Service-Diabetes-Prediction.git -e RUNNER_TOKEN=ALX65S66OQOTFVZ4YVHLYSLKXVUG2 ghcr.io/actions/actions-runner:2.337.0 bash -c '[ -f .runner ] || ./config.sh --unattended --url $REPO_URL --token $RUNNER_TOKEN --name diabetes-ml-platform --labels kind; ./run.sh'
 ```
 После выполнения данных действий для проверки можете зайти в Airflow и запустить dag diabetes_retrain. Если он пройдет успешно в MLFlow вы увидите вашу модель и эксперимент (run).
+
+
+Далее вызовите утилиту k9s командой:
+
+```bash
+k9s
+```
+
+Предварительно установите её командой:
+
+```bash
+winget install Derailed.k9s
+```
+
+Для проверки работы сервиса выполните команды:
+
+```bash
+curl http://diabetes.localhost/health
+curl http://diabetes.localhost/ready
+```
+
+Также можно запустить скрипт командой (отмена через CTRL + C)
+
+```bash
+uv run python scripts/traffic.py --url http://diabetes.localhost --rps 10 --bad 0.1
+```
+
+Если все прошло успешно, значит проект поднялся
+
+Далее для получения первого champion в MLFlow запустите команду:
+
+```bash
+MLFLOW_TRACKING_URI=http://mlflow.localhost uv run python -m diabetes.train
+```
+
+Далее перейдите на mlflow.localhost в раздел runs для просмотра результатов эксперимента обучения
 
 
 ## Метрики и дашборд
