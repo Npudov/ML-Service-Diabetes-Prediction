@@ -6,6 +6,9 @@
 ```bash
 git clone https://github.com/Npudov/ML-Service-Diabetes-Prediction.git
 ```
+
+Датасеты для обучения скачайте по ссылке: https://drive.google.com/drive/folders/1QxY-ghizpP0KeEdWXbPQXqUkKBVAF9xZ?usp=sharing и положите их все в папку datasets/
+
 Далее выполните команду 
 ```bash
 uv sync
@@ -79,6 +82,15 @@ uv run python scripts/traffic.py --url http://diabetes.localhost --rps 10 --bad 
 ```
 
 Если все прошло успешно, значит проект поднялся
+
+Далее для получения первого champion в MLFlow запустите команду:
+
+```bash
+MLFLOW_TRACKING_URI=http://mlflow.localhost uv run python -m diabetes.train
+```
+
+Далее перейдите на mlflow.localhost в раздел runs для просмотра результатов эксперимента обучения
+
 
 ## Метрики и дашборд
 Выберем бакеты для задержки в prometheus из расчёта,что наш сервис отвечает за 50-200 мс в зависимости от нагрузки

@@ -6,6 +6,9 @@
 ```bash
 git clone https://github.com/Npudov/ML-Service-Diabetes-Prediction.git
 ```
+
+Датасеты для обучения скачайте по ссылке: https://drive.google.com/drive/folders/1QxY-ghizpP0KeEdWXbPQXqUkKBVAF9xZ?usp=sharing и положите их все в папку datasets/
+
 Далее выполните команду 
 ```bash
 uv sync
@@ -77,8 +80,15 @@ curl http://diabetes.localhost/ready
 uv run python scripts/traffic.py --url http://diabetes.localhost --rps 10 --bad 0.1
 ```
 
-Если все прошло успешно, значит проект поднялся
+Если все прошло успешно, значит проект поднялся.
 
+Далее для получения первого champion в MLFlow запустите команду:
+
+```bash
+MLFLOW_TRACKING_URI=http://mlflow.localhost uv run python -m diabetes.train
+```
+
+Далее перейдите на mlflow.localhost в раздел runs для просмотра результатов эксперимента обучения
 
 ## Сборка проекта
 Для воссоздания окружения с нужными зависимостями запустите команду из терминала в корне проекта
