@@ -8,7 +8,7 @@ def test_predict_smoke(client, good_row):
     assert body["model_version"]
 
 
-def test_predict_handles_missing_total_charges(client, good_row):
+def test_predict_handles_missing_gender(client, good_row):
     r = client.post("/v1/predict", json={**good_row, "gender": None})
     assert r.status_code == 422
 
